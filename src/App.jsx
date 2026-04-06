@@ -241,7 +241,7 @@ export default function App() {
       <header className="p-6 text-center">
         <h1 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-pink-400 flex items-center justify-center gap-2">
           <Sparkles className="w-6 h-6 text-yellow-400" />
-          やさしい四柱推命
+          ゆっこの四柱推命
           <Heart className="w-5 h-5 text-pink-300" />
         </h1>
         <p className="mt-2 text-sm text-gray-500">本格的な命式と五行バランスを紐解く</p>
@@ -419,6 +419,9 @@ export default function App() {
           </div>
         )}
       </main>
+      <footer className="mt-8 text-center text-xs text-gray-400 pb-4">
+        &copy; {new Date().getFullYear()} naturela. All rights reserved.
+      </footer>
     </div>
   );
 }
