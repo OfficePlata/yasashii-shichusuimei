@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Sparkles, Calendar, Clock, User, ArrowRight, RotateCcw, Heart, Star, BookOpen, Activity, Briefcase } from 'lucide-react';
+import { Sparkles, Calendar, Clock, User, ArrowRight, RotateCcw, Heart, Star, BookOpen, Activity, Briefcase, PieChart as PieChartIcon } from 'lucide-react';
 
 const JIKKAN = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
 const JUNISHI = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
@@ -21,67 +21,68 @@ const JIKKAN_DATA = [
   { name: "癸 (みずのと)", element: "水", description: "清らかな雨が大地を潤すように、知らず知らずのうちに周囲を助ける思いやりがあります。純粋で知性豊か、感受性が鋭く、じっくり物事を深めることで唯一無二の専門性を磨きます。" }
 ];
 
-// 月干通変星（主星）の詳細データ
 const TSUHENSEI_DATA = {
-  "比肩": {
-    catchphrase: "独立心と強い自己確立",
-    description: "自分の信念を曲げず、人に頼らず自らの力で道を切り開く独立心の持ち主です。プライドが高く、ライバルとの競争の中で大きく成長します。組織より独立した立場で才能が最大限に花開くでしょう。"
-  },
-  "劫財": {
-    catchphrase: "不屈の闘争心と勝負強さ",
-    description: "強烈な競争本能と負けず嫌いの精神を持ち、どんな逆境もはね返す粘り強さがあります。財運に波はありますが、人との切磋琢磨の中で実力を磨き、最終的には大きな成果を手にする力があります。"
-  },
-  "食神": {
-    catchphrase: "天性の才能と楽天的な生命力",
-    description: "天からの豊かな恵みを受けた幸運の星です。生まれながらの才能と感受性に恵まれ、食・芸術・表現活動に深い喜びを見出します。その自然体の魅力が人を引きつけ、楽しみながら道が開けていきます。"
-  },
-  "傷官": {
-    catchphrase: "卓越した才能と完璧主義",
-    description: "十星中最高レベルの才能と知性の持ち主です。妥協を許さない完璧主義で、芸術・技術・学問の分野で傑出した実力を発揮します。型破りな個性と反骨精神が、独自のスタイルを生み出す原動力になります。"
-  },
-  "偏財": {
-    catchphrase: "社交の才と広大な人脈",
-    description: "明るく社交的でサービス精神が旺盛、誰とでも打ち解ける天性の魅力があります。臨機応変な対応力と商才に恵まれ、多彩な人間関係からチャンスを引き寄せます。変化のある環境で特に輝きます。"
-  },
-  "正財": {
-    catchphrase: "誠実な努力と揺るぎない信頼感",
-    description: "几帳面で真面目、約束を守り誠実に努力を積み重ねる堅実タイプです。目先の利益より長期的な信頼を重視し、時間をかけて着実に財産と地位を築きます。継続する力が最大の武器です。"
-  },
-  "偏官": {
-    catchphrase: "無限の行動力と開拓者精神",
-    description: "思ったらすぐ動く瞬発力と、困難を正面から突破する強さが持ち味です。型破りな発想と行動力で道なき道を切り開くパイオニア。義侠心が厚く、弱者のために戦う熱い一面も持ちます。"
-  },
-  "正官": {
-    catchphrase: "気品ある責任感と高い倫理観",
-    description: "規律と秩序を重んじ、責任感と使命感が並外れて強いエリートタイプです。正々堂々とした姿勢で周囲の信頼を勝ち取り、組織の中で重要な役割を担うことで真の力を発揮します。"
-  },
-  "偏印": {
-    catchphrase: "独創的な発想と自由な知性",
-    description: "常識にとらわれない奇抜なアイデアと、尽きることない知的探求心の持ち主です。芸術・学術・精神世界など非日常的な分野で唯一無二の才能を発揮しますが、飽きやすい一面もあります。"
-  },
-  "印綬": {
-    catchphrase: "深い知性と人を育む愛情",
-    description: "学ぶことへの純粋な情熱と、人を温かく育てる深い愛情の持ち主です。知識と経験を積むほどに輝きを増し、教育・研究・医療・福祉など人の成長に関わる分野で喜びと使命感を感じます。"
-  }
+  "比肩": { catchphrase: "独立心と強い自己確立", description: "自分の信念を曲げず、人に頼らず自らの力で道を切り開く独立心の持ち主です。プライドが高く、ライバルとの競争の中で大きく成長します。組織より独立した立場で才能が最大限に花開くでしょう。" },
+  "劫財": { catchphrase: "不屈の闘争心と勝負強さ", description: "強烈な競争本能と負けず嫌いの精神を持ち、どんな逆境もはね返す粘り強さがあります。財運に波はありますが、人との切磋琢磨の中で実力を磨き、最終的には大きな成果を手にする力があります。" },
+  "食神": { catchphrase: "天性の才能と楽天的な生命力", description: "天からの豊かな恵みを受けた幸運の星です。生まれながらの才能と感受性に恵まれ、食・芸術・表現活動に深い喜びを見出します。その自然体の魅力が人を引きつけ、楽しみながら道が開けていきます。" },
+  "傷官": { catchphrase: "卓越した才能と完璧主義", description: "十星中最高レベルの才能と知性の持ち主です。妥協を許さない完璧主義で、芸術・技術・学問の分野で傑出した実力を発揮します。型破りな個性と反骨精神が、独自のスタイルを生み出す原動力になります。" },
+  "偏財": { catchphrase: "社交の才と広大な人脈", description: "明るく社交的でサービス精神が旺盛、誰とでも打ち解ける天性の魅力があります。臨機応変な対応力と商才に恵まれ、多彩な人間関係からチャンスを引き寄せます。変化のある環境で特に輝きます。" },
+  "正財": { catchphrase: "誠実な努力と揺るぎない信頼感", description: "几帳面で真面目、約束を守り誠実に努力を積み重ねる堅実タイプです。目先の利益より長期的な信頼を重視し、時間をかけて着実に財産と地位を築きます。継続する力が最大の武器です。" },
+  "偏官": { catchphrase: "無限の行動力と開拓者精神", description: "思ったらすぐ動く瞬発力と、困難を正面から突破する強さが持ち味です。型破りな発想と行動力で道なき道を切り開くパイオニア。義侠心が厚く、弱者のために戦う熱い一面も持ちます。" },
+  "正官": { catchphrase: "気品ある責任感と高い倫理観", description: "規律と秩序を重んじ、責任感と使命感が並外れて強いエリートタイプです。正々堂々とした姿勢で周囲の信頼を勝ち取り、組織の中で重要な役割を担うことで真の力を発揮します。" },
+  "偏印": { catchphrase: "独創的な発想と自由な知性", description: "常識にとらわれない奇抜なアイデアと、尽きることない知的探求心の持ち主です。芸術・学術・精神世界など非日常的な分野で唯一無二の才能を発揮しますが、飽きやすい一面もあります。" },
+  "印綬": { catchphrase: "深い知性と人を育む愛情", description: "学ぶことへの純粋な情熱と、人を温かく育てる深い愛情の持ち主です。知識と経験を積むほどに輝きを増し、教育・研究・医療・福祉など人の成長に関わる分野で喜びと使命感を感じます。" }
+};
+
+// 推命パラメーター
+const PARAM_META = {
+  "自立心": { color: "#93c5fd", bg: "bg-blue-100",   text: "text-blue-700",  desc: "他人に依存することなく、自分が信じた道を突き進む強い精神性。リーダーシップを発揮し、フリーで活躍できる。" },
+  "遊び心": { color: "#fdba74", bg: "bg-orange-100", text: "text-orange-700", desc: "楽しいことを企画したり、生活に遊びを取り入れることが自然とできる。芸術面での才能があったり、表現力も豊富。" },
+  "人脈":   { color: "#86efac", bg: "bg-green-100",  text: "text-green-700",  desc: "さりげない気配りができて誰とでも仲良くなれる。サービス精神が旺盛でコミュニケーション能力も高く人を動かせる。" },
+  "行動力": { color: "#f9a8d4", bg: "bg-pink-100",   text: "text-pink-700",   desc: "頭で考えるより行動で結果を出す。未知の分野に挑戦する意欲が強く、交渉力や営業力を磨けば成功できる。" },
+  "知性":   { color: "#fde047", bg: "bg-yellow-100", text: "text-yellow-700", desc: "様々な分野の知識が豊富で、何かを学ぶことに喜びを感じる。頭の回転が速く、物事を論理的に捉えることが上手。" }
+};
+
+const PARAM_ORDER = ["自立心", "遊び心", "人脈", "行動力", "知性"];
+
+// 通変星 → パラメーター
+const TSUHENSEI_TO_PARAM = {
+  "比肩": "自立心", "劫財": "自立心",
+  "食神": "遊び心", "傷官": "遊び心",
+  "偏財": "人脈",   "正財": "人脈",
+  "偏官": "行動力", "正官": "行動力",
+  "偏印": "知性",   "印綬": "知性"
 };
 
 const JUNIUN_TABLE = [
-  ["沐浴", "冠帯", "建禄", "帝旺", "衰", "病", "死", "墓", "絶", "胎", "養", "長生"],
-  ["病", "衰", "帝旺", "建禄", "冠帯", "沐浴", "長生", "養", "胎", "絶", "墓", "死"],
-  ["胎", "養", "長生", "沐浴", "冠帯", "建禄", "帝旺", "衰", "病", "死", "墓", "絶"],
-  ["絶", "墓", "死", "病", "衰", "帝旺", "建禄", "冠帯", "沐浴", "長生", "養", "胎"],
-  ["胎", "養", "長生", "沐浴", "冠帯", "建禄", "帝旺", "衰", "病", "死", "墓", "絶"],
-  ["絶", "墓", "死", "病", "衰", "帝旺", "建禄", "冠帯", "沐浴", "長生", "養", "胎"],
-  ["死", "墓", "絶", "胎", "養", "長生", "沐浴", "冠帯", "建禄", "帝旺", "衰", "病"],
-  ["長生", "沐浴", "冠帯", "建禄", "帝旺", "衰", "病", "死", "墓", "絶", "胎", "養"],
-  ["帝旺", "衰", "病", "死", "墓", "絶", "胎", "養", "長生", "沐浴", "冠帯", "建禄"],
-  ["建禄", "冠帯", "沐浴", "長生", "養", "胎", "絶", "墓", "死", "病", "衰", "帝旺"]
+  ["沐浴","冠帯","建禄","帝旺","衰","病","死","墓","絶","胎","養","長生"],
+  ["病","衰","帝旺","建禄","冠帯","沐浴","長生","養","胎","絶","墓","死"],
+  ["胎","養","長生","沐浴","冠帯","建禄","帝旺","衰","病","死","墓","絶"],
+  ["絶","墓","死","病","衰","帝旺","建禄","冠帯","沐浴","長生","養","胎"],
+  ["胎","養","長生","沐浴","冠帯","建禄","帝旺","衰","病","死","墓","絶"],
+  ["絶","墓","死","病","衰","帝旺","建禄","冠帯","沐浴","長生","養","胎"],
+  ["死","墓","絶","胎","養","長生","沐浴","冠帯","建禄","帝旺","衰","病"],
+  ["長生","沐浴","冠帯","建禄","帝旺","衰","病","死","墓","絶","胎","養"],
+  ["帝旺","衰","病","死","墓","絶","胎","養","長生","沐浴","冠帯","建禄"],
+  ["建禄","冠帯","沐浴","長生","養","胎","絶","墓","死","病","衰","帝旺"]
 ];
 
 const ENERGY_MAP = {
-  "胎": 3, "養": 6, "長生": 9, "沐浴": 7, "冠帯": 10, "建禄": 11,
-  "帝旺": 12, "衰": 8, "病": 4, "死": 2, "墓": 5, "絶": 1
+  "胎":3,"養":6,"長生":9,"沐浴":7,"冠帯":10,"建禄":11,
+  "帝旺":12,"衰":8,"病":4,"死":2,"墓":5,"絶":1
 };
+
+// 天中殺（空亡）テーブル — ブロック番号 → 空亡する地支ペア名
+const TENCHUSATSU_TABLE = ["戌亥", "申酉", "午未", "辰巳", "寅卯", "子丑"];
+
+function getTenchusatsuBlock(kanIdx, shiIdx) {
+  for (let n = 0; n < 6; n++) {
+    if ((kanIdx + 10 * n) % 12 === shiIdx) {
+      return Math.floor((kanIdx + 10 * n) / 10);
+    }
+  }
+  return 0;
+}
 
 function getTsuhensei(baseIdx, targetIdx) {
   if (targetIdx == null) return "-";
@@ -97,13 +98,10 @@ function getTsuhensei(baseIdx, targetIdx) {
   }
 }
 
-// 天文計算に基づく節入り日補正テーブル（算出式との差分）
 const SETSUIRI_CORRECTIONS = {
-  // 立春 (月2節) — 実測値が式の結果と異なる年
   '1980-2': 1, '1984-2': 1,
   '1994-2': -1, '1995-2': -1, '1999-2': -1,
   '2021-2': -1, '2023-2': -1, '2025-2': -1, '2029-2': -1,
-  // 清明 (月4節)
   '2021-4': 1, '2022-4': 1,
 };
 
@@ -117,16 +115,17 @@ function getSetsuiriDay(year, month) {
   return base + (SETSUIRI_CORRECTIONS[`${year}-${month}`] || 0);
 }
 
-// 引数を Date オブジェクトではなく年月日の数値で受け取り、タイムゾーン問題を回避
 function calculateMeishiki(year, month, day) {
-  // 日干支（1900年1月1日＝甲戌 を基準）
+  // ── 日干支 ──
+  // 1900/1/1 = 甲(0)戌(10) を基準。戌のオフセット+10が必須
   const diffDays = Math.round(
     (Date.UTC(year, month - 1, day) - Date.UTC(1900, 0, 1)) / 86400000
   );
   const dayKanIdx = ((diffDays % 10) + 10) % 10;
-  const dayShiIdx = ((diffDays % 12) + 12) % 12;
+  // ※ 前回の修正で +10 オフセットが抜けていたバグを修正
+  const dayShiIdx = ((10 + diffDays % 12) + 12) % 12;
 
-  // 節入り判定
+  // ── 節入り判定 ──
   let setsuYear = year, setsuMonth = month;
   const setsuDay = getSetsuiriDay(year, month);
   if (day < setsuDay) {
@@ -136,11 +135,11 @@ function calculateMeishiki(year, month, day) {
   let kY = setsuYear;
   if (setsuMonth === 1) kY--;
 
-  // 年干支
+  // ── 年干支 ──
   const yearKanIdx = ((kY - 4) % 10 + 10) % 10;
   const yearShiIdx = ((kY - 4) % 12 + 12) % 12;
 
-  // 月干支
+  // ── 月干支 ──
   let emM = setsuMonth - 2;
   if (setsuMonth === 1) emM = 11;
   else if (setsuMonth === 12) emM = 10;
@@ -148,13 +147,12 @@ function calculateMeishiki(year, month, day) {
   const monthKanIdx = ((4 + totalMonths % 10) + 10) % 10;
   const monthShiIdx = ((2 + totalMonths % 12) + 12) % 12;
 
-  // 五行バランス
+  // ── 五行カウント ──
   const gogyoCounts = [0, 0, 0, 0, 0];
   [yearKanIdx, monthKanIdx, dayKanIdx].forEach(k => gogyoCounts[Math.floor(k / 2)]++);
   [yearShiIdx, monthShiIdx, dayShiIdx].forEach(s => gogyoCounts[SHI_GOGYO[s]]++);
 
-  // 柱の生成 — isDayPillar=true のとき通変星は「-」（日柱自身に通変星なし）
-  // ※修正前: kanIdx===dayKanIdx のとき月柱・年柱も「-」になるバグがあった
+  // ── 柱の生成 ──
   const buildPillar = (kanIdx, shiIdx, isDayPillar) => {
     const zoukanIdx = ZOUKAN_MAP[shiIdx];
     const juniunsei = JUNIUN_TABLE[dayKanIdx][shiIdx];
@@ -169,83 +167,120 @@ function calculateMeishiki(year, month, day) {
     };
   };
 
+  const yearPillar  = buildPillar(yearKanIdx,  yearShiIdx,  false);
+  const monthPillar = buildPillar(monthKanIdx, monthShiIdx, false);
+  const dayPillar   = buildPillar(dayKanIdx,   dayShiIdx,   true);
+
+  // ── 天中殺 ──
+  const dayTenchusatsu  = TENCHUSATSU_TABLE[getTenchusatsuBlock(dayKanIdx,  dayShiIdx)];
+  const monthTenchusatsu = TENCHUSATSU_TABLE[getTenchusatsuBlock(monthKanIdx, monthShiIdx)];
+  const yearTenchusatsu  = TENCHUSATSU_TABLE[getTenchusatsuBlock(yearKanIdx,  yearShiIdx)];
+
+  // ── 推命パラメーター ──
+  // 月干通変星・年干通変星・日支蔵干・月支蔵干・年支蔵干の5スロット合計
+  const paramCounts = { "自立心": 0, "遊び心": 0, "人脈": 0, "行動力": 0, "知性": 0 };
+  [
+    monthPillar.tsuhensei,
+    yearPillar.tsuhensei,
+    dayPillar.zoukanTsuhensei,
+    monthPillar.zoukanTsuhensei,
+    yearPillar.zoukanTsuhensei
+  ].forEach(t => {
+    const p = TSUHENSEI_TO_PARAM[t];
+    if (p) paramCounts[p]++;
+  });
+  const paramTotal = Object.values(paramCounts).reduce((a, b) => a + b, 0) || 1;
+  const params = PARAM_ORDER.map(name => ({
+    name,
+    count: paramCounts[name],
+    pct: Math.round(paramCounts[name] / paramTotal * 100)
+  }));
+
   return {
     dayKanIdx,
     dayGogyo: Math.floor(dayKanIdx / 2),
-    year: buildPillar(yearKanIdx, yearShiIdx, false),
-    month: buildPillar(monthKanIdx, monthShiIdx, false),
-    day: buildPillar(dayKanIdx, dayShiIdx, true),
+    year: yearPillar,
+    month: monthPillar,
+    day: dayPillar,
     isBeforeSetsuiri: day < setsuDay,
     setsuDay,
-    gogyoCounts
+    gogyoCounts,
+    dayTenchusatsu,
+    monthTenchusatsu,
+    yearTenchusatsu,
+    params
   };
 }
 
-// 五行相関図 — dayGogyo の五行を上部に配置
+// ── 五行相関図（日干の五行を上部） ──
 function GogyoChart({ counts, dayGogyo }) {
-  // 五角形の頂点座標（上から時計回り）
   const basePositions = [
-    { x: 50, y: 15 },  // 上
-    { x: 85, y: 40 },  // 右上
-    { x: 70, y: 80 },  // 右下
-    { x: 30, y: 80 },  // 左下
-    { x: 15, y: 40 },  // 左上
+    { x: 50, y: 15 }, { x: 85, y: 40 }, { x: 70, y: 80 },
+    { x: 30, y: 80 }, { x: 15, y: 40 }
   ];
-
-  // position i に表示する五行 = (dayGogyo + i) % 5
   const items = basePositions.map((pos, i) => {
     const gogyoIdx = (dayGogyo + i) % 5;
     return { ...pos, gogyoIdx, name: GOGYO_NAMES[gogyoIdx], count: counts[gogyoIdx], isTop: i === 0 };
   });
-
   return (
     <div className="relative w-full aspect-square max-w-[280px] mx-auto mt-6 bg-white/50 rounded-full p-4 shadow-inner border border-gray-100">
       <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
-        {/* 相生ライン（五角形） */}
         <polygon points="50,15 85,40 70,80 30,80 15,40" fill="none" stroke="#fbcfe8" strokeWidth="1" strokeDasharray="2,2" />
-        {/* 相剋ライン（星型） */}
         <polygon points="50,15 70,80 15,40 85,40 30,80" fill="none" stroke="#d1d5db" strokeWidth="1" strokeDasharray="1,3" />
-
         {items.map((item, i) => {
           const size = item.count > 0 ? 8 + item.count * 1.5 : 6;
           return (
             <g key={i}>
-              {/* 日干の五行（上部）に強調リング */}
-              {item.isTop && (
-                <circle cx={item.x} cy={item.y} r={size + 3.5}
-                  fill="none" stroke="#f9a8d4" strokeWidth="1.5" strokeDasharray="3,1.5" />
-              )}
-              <circle cx={item.x} cy={item.y} r={size}
-                fill={GOGYO_COLORS[item.gogyoIdx]} opacity={item.count > 0 ? 1 : 0.3} />
-              <text x={item.x} y={item.y + 1.5} fontSize="5" textAnchor="middle"
-                alignmentBaseline="middle"
-                fill={item.count > 0 ? '#374151' : '#9ca3af'} fontWeight="bold">
-                {item.name}
-              </text>
-              {/* カウントバッジ */}
-              <circle cx={item.x + size} cy={item.y - size} r="3"
-                fill="#fff" stroke="#fbcfe8" strokeWidth="0.5" />
-              <text x={item.x + size} y={item.y - size + 1.5} fontSize="3.5"
-                textAnchor="middle" alignmentBaseline="middle" fill="#ec4899" fontWeight="bold">
-                {item.count}
-              </text>
-              {/* 上部ノードに「日干」ラベル */}
-              {item.isTop && (
-                <text x={item.x} y={item.y - size - 5} fontSize="3.8"
-                  textAnchor="middle" fill="#ec4899" fontWeight="bold">
-                  日干
-                </text>
-              )}
+              {item.isTop && <circle cx={item.x} cy={item.y} r={size + 3.5} fill="none" stroke="#f9a8d4" strokeWidth="1.5" strokeDasharray="3,1.5" />}
+              <circle cx={item.x} cy={item.y} r={size} fill={GOGYO_COLORS[item.gogyoIdx]} opacity={item.count > 0 ? 1 : 0.3} />
+              <text x={item.x} y={item.y + 1.5} fontSize="5" textAnchor="middle" alignmentBaseline="middle" fill={item.count > 0 ? '#374151' : '#9ca3af'} fontWeight="bold">{item.name}</text>
+              <circle cx={item.x + size} cy={item.y - size} r="3" fill="#fff" stroke="#fbcfe8" strokeWidth="0.5" />
+              <text x={item.x + size} y={item.y - size + 1.5} fontSize="3.5" textAnchor="middle" alignmentBaseline="middle" fill="#ec4899" fontWeight="bold">{item.count}</text>
+              {item.isTop && <text x={item.x} y={item.y - size - 5} fontSize="3.8" textAnchor="middle" fill="#ec4899" fontWeight="bold">日干</text>}
             </g>
           );
         })}
       </svg>
       <div className="absolute bottom-3 left-0 right-0 text-[10px] text-gray-400 text-center flex items-center justify-center gap-3">
-        <span>-- 相生</span>
-        <span>･･ 相剋</span>
-        <span className="text-pink-400">◎ 日干の五行</span>
+        <span>-- 相生</span><span>･･ 相剋</span><span className="text-pink-400">◎ 日干</span>
       </div>
     </div>
+  );
+}
+
+// ── 推命パラメーター 円グラフ ──
+function PieChart({ params }) {
+  const nonZero = params.filter(p => p.pct > 0);
+  const cx = 50, cy = 50, r = 44;
+  let angle = -Math.PI / 2;
+  const slices = nonZero.map(p => {
+    const sweep = (p.pct / 100) * 2 * Math.PI;
+    const sa = angle, ea = angle + sweep;
+    angle = ea;
+    const x1 = cx + r * Math.cos(sa), y1 = cy + r * Math.sin(sa);
+    const x2 = cx + r * Math.cos(ea), y2 = cy + r * Math.sin(ea);
+    const mid = sa + sweep / 2;
+    const lr = r * 0.62;
+    return {
+      path: `M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${sweep > Math.PI ? 1 : 0} 1 ${x2},${y2} Z`,
+      color: PARAM_META[p.name].color,
+      label: p.pct >= 10 ? `${p.pct}%` : '',
+      lx: cx + lr * Math.cos(mid),
+      ly: cy + lr * Math.sin(mid),
+      ...p
+    };
+  });
+  return (
+    <svg viewBox="0 0 100 100" className="w-full max-w-[180px] mx-auto drop-shadow-sm">
+      {slices.map((s, i) => (
+        <g key={i}>
+          <path d={s.path} fill={s.color} stroke="white" strokeWidth="1" />
+          {s.label && (
+            <text x={s.lx} y={s.ly} fontSize="5.5" textAnchor="middle" alignmentBaseline="middle" fill="#374151" fontWeight="bold">{s.label}</text>
+          )}
+        </g>
+      ))}
+    </svg>
   );
 }
 
@@ -263,20 +298,13 @@ export default function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.birthDate || !formData.gender) return;
-
-    // 日付・時刻をJSTとして直接パース（Dateオブジェクトのタイムゾーン問題を回避）
     const [bYear, bMonth, bDay] = formData.birthDate.split('-').map(Number);
     const bHour = formData.birthTime ? parseInt(formData.birthTime.split(':')[0], 10) : 12;
-
-    // 子刻（23時以降）は翌日の日干支で計算
     let calcYear = bYear, calcMonth = bMonth, calcDay = bDay;
     if (bHour >= 23) {
       const next = new Date(bYear, bMonth - 1, bDay + 1);
-      calcYear = next.getFullYear();
-      calcMonth = next.getMonth() + 1;
-      calcDay = next.getDate();
+      calcYear = next.getFullYear(); calcMonth = next.getMonth() + 1; calcDay = next.getDate();
     }
-
     setMeishiki(calculateMeishiki(calcYear, calcMonth, calcDay));
     setVisibleElements([]);
     setStep('result');
@@ -295,7 +323,7 @@ export default function App() {
 
   useEffect(() => {
     if (step === 'result' && meishiki) {
-      ['dayCard', 'monthCard', 'table', 'chart', 'button'].forEach((el, i) => {
+      ['dayCard', 'monthCard', 'params', 'table', 'chart', 'button'].forEach((el, i) => {
         setTimeout(() => setVisibleElements(prev => [...prev, el]), 150 + i * 200);
       });
     }
@@ -324,14 +352,13 @@ export default function App() {
                 <input type="date" name="birthDate" value={formData.birthDate} onChange={handleInputChange}
                   className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition-all outline-none" required />
               </div>
-
               <div className="space-y-3">
                 <label className="flex items-center gap-2 text-sm font-semibold text-gray-600">
                   <User className="w-4 h-4 text-pink-400" />
                   性別 <span className="text-xs text-pink-500 bg-pink-50 px-2 py-0.5 rounded-full">必須</span>
                 </label>
                 <div className="grid grid-cols-2 gap-3">
-                  {['female', 'male'].map((g) => (
+                  {['female', 'male'].map(g => (
                     <button key={g} type="button"
                       onClick={() => setFormData(prev => ({ ...prev, gender: g }))}
                       className={`py-3 px-4 rounded-2xl border-2 transition-all font-medium ${formData.gender === g ? 'border-pink-300 bg-pink-50 text-pink-700' : 'border-gray-50 bg-gray-50 text-gray-500'}`}>
@@ -340,7 +367,6 @@ export default function App() {
                   ))}
                 </div>
               </div>
-
               <div className="space-y-2 pt-2">
                 <label className="flex items-center gap-2 text-sm font-semibold text-gray-600">
                   <Clock className="w-4 h-4 text-yellow-400" />
@@ -350,7 +376,6 @@ export default function App() {
                   className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-yellow-200 focus:border-yellow-300 transition-all outline-none" />
                 <p className="text-xs text-gray-400 pl-1">※23時以降は翌日の干支として計算されます</p>
               </div>
-
               <div className="pt-4">
                 <button type="submit" disabled={!isFormValid}
                   className={`w-full py-4 rounded-2xl flex items-center justify-center gap-2 text-lg font-bold transition-all duration-300 ${isFormValid ? 'bg-gradient-to-r from-yellow-400 to-pink-400 text-white shadow-lg shadow-pink-200 hover:scale-[1.02]' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}>
@@ -364,7 +389,7 @@ export default function App() {
         {step === 'result' && meishiki && (
           <div className="space-y-6 pb-8">
 
-            {/* 本質の星カード（日干） */}
+            {/* 本質の星（日干） */}
             <div className={`bg-white/90 backdrop-blur-md rounded-3xl shadow-xl shadow-pink-100/60 p-8 border border-white relative overflow-hidden transition-all duration-700 transform ${visibleElements.includes('dayCard') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="absolute top-0 right-0 p-6 opacity-10"><Star className="w-32 h-32 text-yellow-500" /></div>
               <div className="relative z-10 text-center space-y-4">
@@ -379,7 +404,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* 才能・社会性カード（月干通変星＝主星） */}
+            {/* 才能・社会性（月干通変星・主星） */}
             <div className={`bg-white/80 backdrop-blur-md rounded-3xl shadow-lg shadow-yellow-100/50 p-6 border border-white transition-all duration-700 transform ${visibleElements.includes('monthCard') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <h3 className="text-center font-bold text-gray-700 mb-4 flex items-center justify-center gap-2">
                 <Briefcase className="w-5 h-5 text-yellow-500" />
@@ -396,7 +421,41 @@ export default function App() {
               </div>
             </div>
 
-            {/* 詳細命式表 */}
+            {/* 推命パラメーター */}
+            <div className={`bg-white/80 rounded-3xl p-6 border border-pink-100 shadow-md transition-all duration-700 transform ${visibleElements.includes('params') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <h3 className="text-center font-bold text-gray-700 mb-5 flex items-center justify-center gap-2 text-lg">
+                <PieChartIcon className="w-5 h-5 text-pink-400" /> 推命パラメーター
+              </h3>
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                {/* 円グラフ */}
+                <div className="w-full md:w-auto flex-shrink-0">
+                  <PieChart params={meishiki.params} />
+                  {/* 凡例 */}
+                  <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mt-3">
+                    {meishiki.params.filter(p => p.pct > 0).map(p => (
+                      <span key={p.name} className="flex items-center gap-1 text-xs text-gray-600">
+                        <span className="w-3 h-3 rounded-full inline-block flex-shrink-0" style={{ backgroundColor: PARAM_META[p.name].color }} />
+                        {p.name} {p.pct}%
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                {/* 説明リスト */}
+                <ul className="w-full space-y-3 text-sm">
+                  {meishiki.params.filter(p => p.pct > 0).map(p => (
+                    <li key={p.name} className="flex items-start gap-2">
+                      <span className="mt-1 w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: PARAM_META[p.name].color }} />
+                      <div>
+                        <span className={`font-bold ${PARAM_META[p.name].text}`}>{p.name}（{p.pct}%）</span>
+                        <span className="text-gray-500 ml-1">… {PARAM_META[p.name].desc}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* 詳細命式表（天中殺含む） */}
             <div className={`bg-white/80 rounded-3xl p-5 md:p-8 border border-pink-100 shadow-md transition-all duration-700 transform ${visibleElements.includes('table') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <h3 className="text-center font-bold text-gray-700 mb-6 flex items-center justify-center gap-2 text-lg">
                 <BookOpen className="w-5 h-5 text-pink-400" /> 詳細命式表
@@ -407,18 +466,22 @@ export default function App() {
                     <tr className="border-b-2 border-pink-100">
                       <th className="py-3 px-2 text-xs text-gray-400 font-normal text-left w-1/4">項目</th>
                       <th className="py-3 px-2 text-pink-500 font-bold w-1/4 relative">
-                        <span className="absolute -top-1 left-1/2 -translate-x-1/2 text-[9px] bg-pink-100 text-pink-600 px-1.5 rounded-sm">本質</span>
-                        日柱
+                        <span className="absolute -top-1 left-1/2 -translate-x-1/2 text-[9px] bg-pink-100 text-pink-600 px-1.5 rounded-sm">本質</span>日柱
                       </th>
                       <th className="py-3 px-2 text-yellow-600 font-bold w-1/4 relative">
-                        <span className="absolute -top-1 left-1/2 -translate-x-1/2 text-[9px] bg-yellow-100 text-yellow-700 px-1.5 rounded-sm">才能</span>
-                        月柱
+                        <span className="absolute -top-1 left-1/2 -translate-x-1/2 text-[9px] bg-yellow-100 text-yellow-700 px-1.5 rounded-sm">才能</span>月柱
                       </th>
                       <th className="py-3 px-2 text-gray-400 font-bold w-1/4">年柱</th>
                     </tr>
                   </thead>
                   <tbody className="text-sm md:text-base text-gray-700">
-                    <tr className="border-b border-gray-50 bg-gray-50/50">
+                    <tr className="border-b border-gray-100 bg-gray-50/70">
+                      <td className="py-2 px-2 text-xs text-gray-500 text-left">天中殺</td>
+                      <td className="py-2 px-2 text-sm font-bold text-pink-600 bg-pink-50/30">{meishiki.dayTenchusatsu}</td>
+                      <td className="py-2 px-2 text-sm font-bold text-yellow-600 bg-yellow-50/30">{meishiki.monthTenchusatsu}</td>
+                      <td className="py-2 px-2 text-sm font-bold text-gray-600">{meishiki.yearTenchusatsu}</td>
+                    </tr>
+                    <tr className="border-b border-gray-50 bg-gray-50/30">
                       <td className="py-3 px-2 text-xs text-gray-500 text-left">柱の意味</td>
                       <td className="py-3 px-2 text-xs font-medium text-pink-600 bg-pink-50/30">自分・晩年</td>
                       <td className="py-3 px-2 text-xs font-medium text-yellow-600 bg-yellow-50/30">親・中年</td>
@@ -482,7 +545,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* 戻るボタン */}
             <div className={`pt-2 transition-all duration-700 transform ${visibleElements.includes('button') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <button onClick={handleReset}
                 className="w-full py-4 bg-white text-gray-600 rounded-2xl border-2 border-pink-100 font-bold flex items-center justify-center gap-2 hover:bg-pink-50 transition-colors">
